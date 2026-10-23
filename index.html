@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fdf8ef">
+<title>체교 실기 Road</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --navy:#1d3b5c; --orange:#f5862a; --orange-d:#e5741a; --orange-soft:#fde9d3;
+  --cream:#fdf8ef; --card:#fffdf9; --line:#ece3d3; --ink:#2b2b2b; --sub:#858585;
+  --green:#7dc87a; --teal:#79c9bd; --yellow:#f6cf4a; --gray:#e3e3e3; --blue:#5b8fd6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:#f1eadc;color:var(--ink);-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:inherit}
+.phone{max-width:420px;margin:0 auto;height:100dvh;background:var(--cream);display:flex;flex-direction:column;position:relative;overflow:hidden}
+@media (min-width:500px){
+  body{padding:24px 0}
+  .phone{height:calc(100dvh - 48px);max-height:900px;border-radius:36px;box-shadow:0 20px 60px rgba(80,55,20,.18);border:1px solid var(--line)}
+}
+.screen{flex:1;overflow-y:auto;padding:18px 20px 28px;padding-top:calc(18px + env(safe-area-inset-top))}
+
+/* bottom nav */
+.nav{display:flex;border-top:1px solid var(--line);background:#fffdf8;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+.nav button{flex:1;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:#555}
+.nav button.on{color:var(--orange);font-weight:700}
+.nav svg{width:24px;height:24px}
+
+/* header */
+.hd{display:flex;align-items:center;gap:8px;margin-bottom:14px;min-height:44px}
+.hd h2{flex:1;margin:0;text-align:center;font-size:21px;font-weight:800;color:var(--navy);letter-spacing:-.3px}
+.hd .back{width:40px;height:40px;border:0;background:none;display:grid;place-items:center;border-radius:12px}
+.hd .back:hover{background:#f3ebdd}
+.hd .r{width:40px;height:40px;display:grid;place-items:center}
+.hd .r button{border:0;background:none;padding:0;display:grid;place-items:center}
+.hd.plain h2{text-align:left}
+
+/* home */
+.logo{font-size:34px;font-weight:900;color:var(--navy);text-align:center;margin:6px 0 4px;letter-spacing:-1px;position:relative}
+.logo b{color:var(--orange);font-weight:900}
+.logo .star{position:absolute;top:-6px;margin-left:2px;font-size:16px}
+.tagline{text-align:center;color:#555;font-size:14px;margin:0 0 6px}
+.map{position:relative;width:100%;aspect-ratio:4/5;margin:6px 0 14px}
+.tile{position:absolute;border:2px solid #fff;border-radius:18px;display:grid;place-items:center;font-weight:700;font-size:14px;color:#3c3c3c;box-shadow:0 2px 0 rgba(0,0,0,.06);transition:transform .15s, box-shadow .15s}
+.tile:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.12);z-index:5}
+.tile:active{transform:scale(.97)}
+.tile.small{font-size:12px;border-radius:12px;z-index:3}
+.cloud{position:absolute;font-size:22px;opacity:.55;pointer-events:none}
+.search{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:12px 14px}
+.search input{flex:1;border:0;outline:0;background:none;font-size:15px}
+.search svg{flex:none;width:20px;height:20px}
+.tile.low span{position:absolute;left:0;right:0;bottom:10%;text-align:center}
+.results{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+
+/* cards & lists */
+.sub-t{text-align:center;color:#555;font-size:14px;margin:-4px 0 16px}
+.list{display:flex;flex-direction:column;gap:12px}
+.uni-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px 14px;text-align:left;width:100%}
+.uni-row:hover{border-color:#e5cfa9}
+.uni-row .nm{flex:1;font-weight:700;font-size:16px}
+.uni-row .meta{display:block;font-size:12px;color:var(--sub);font-weight:500;margin-top:2px}
+.icon-btn{border:0;background:none;padding:4px;display:grid;place-items:center;border-radius:10px}
+.icon-btn:hover{background:#f6eee1}
+.sec-t{font-weight:800;font-size:15px;margin:18px 0 8px;color:#333}
+.sec-t small{font-weight:500;color:var(--sub);font-size:12px}
+.box{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:6px 16px}
+.kv{display:flex;justify-content:space-between;align-items:center;padding:11px 0;font-size:14px;border-bottom:1px dashed #efe6d6}
+.kv:last-child{border-bottom:0}
+.kv .v{font-weight:600}
+.ev-row{width:100%;border:0;background:none;text-align:left;cursor:pointer}
+.ev-row .chev{color:#c3b59d;margin-left:6px}
+.desc ul{margin:8px 0;padding-left:18px;font-size:14px;line-height:1.75}
+.muted{color:var(--sub);font-weight:500;font-size:13px}
+.seg{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;color:#555}
+.seg span{margin-right:auto;font-weight:600}
+.seg button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 18px;font-weight:700}
+.seg button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.ratio{display:flex;justify-content:space-around;flex-wrap:wrap;gap:6px;padding:12px 0;font-size:14px}
+.ratio b{color:var(--orange-d)}
+.loc{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;font-size:13px}
+.uni-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+.btns{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;border:0;border-radius:14px;padding:15px 12px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.or{background:var(--orange);color:#fff}
+.btn.or:hover{background:var(--orange-d)}
+.btn.nv{background:var(--navy);color:#fff}
+.btn.ghost{background:var(--orange-soft);color:var(--orange-d);border:1.5px solid #f6c99b;flex:.7}
+.btn.ghost.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+.note{font-size:11.5px;color:var(--sub);margin-top:14px;line-height:1.5;text-align:center}
+
+/* record input */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;margin:-4px 0 4px;scrollbar-width:none}
+.chip{flex:none;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.field{display:flex;align-items:center;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:6px 16px;min-height:56px}
+.field input{flex:1;border:0;outline:0;background:none;font-size:24px;font-weight:700;text-align:center;min-width:0}
+.field .u{color:#555;font-size:15px}
+.date-row{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px;color:var(--sub)}
+.date-row input{border:1.5px solid var(--line);border-radius:10px;padding:6px 10px;background:#fff;font-size:13px}
+.stepper{display:flex;align-items:center;background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;min-height:56px}
+.stepper button{width:56px;align-self:stretch;border:0;background:#fff;font-size:24px;color:#444}
+.stepper button:hover{background:#faf3e8}
+.stepper .val{flex:1;text-align:center;font-size:24px;font-weight:700;border-left:1.5px solid var(--line);border-right:1.5px solid var(--line);padding:12px 0}
+.stepper .val small{font-size:14px;font-weight:500;color:#555;margin-left:4px}
+.hint{font-size:12px;color:var(--orange-d);margin-top:6px}
+.rec{display:flex;align-items:center;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px 11px 16px;font-size:14px}
+.rec .d{flex:1;color:#444}
+.rec .n{font-weight:700;font-size:17px;margin-right:6px}
+.rec .u{color:#555;margin-right:10px}
+.recs{display:flex;flex-direction:column;gap:8px}
+.empty{color:var(--sub);font-size:13px;text-align:center;padding:16px;border:1.5px dashed var(--line);border-radius:12px}
+
+/* analysis */
+.pill{display:inline-block;background:#e6eef8;color:var(--navy);font-weight:700;font-size:13px;padding:5px 12px;border-radius:999px;margin:10px 0 4px}
+.big{font-size:22px;font-weight:800}
+.big small{font-size:14px;font-weight:500;color:#555;margin-left:4px}
+.big.or{color:var(--orange)}
+.big.gr{color:#3f9c4a}
+.chart{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:10px 8px 6px}
+.chart svg{width:100%;height:auto;display:block}
+.cheer{display:flex;gap:12px;align-items:center;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:14px;font-size:14px;line-height:1.5}
+.cheer b{color:var(--orange);font-size:16px}
+
+/* saved */
+.sv{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px 16px}
+.sv-h{display:flex;align-items:center;justify-content:space-between}
+.sv-h b{font-size:17px}
+.sv .ev{font-size:12.5px;color:var(--sub);margin:4px 0 10px}
+.prep{width:100%;display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600;text-align:left}
+.prep .lbl{margin-right:6px}
+.dot{width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(0,0,0,.12);flex:none}
+.dot.ok{background:var(--green)} .dot.ing{background:var(--yellow)} .dot.no{background:var(--gray)}
+.prep .chev{margin-left:auto;color:#aaa}
+.legend{display:flex;gap:14px;justify-content:center;font-size:12px;color:var(--sub);margin:4px 0 14px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend .dot{width:12px;height:12px}
+
+/* my records */
+.mine{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;width:100%;text-align:left}
+.mine .t{flex:1}
+.mine .t b{display:block;font-size:15px}
+.mine .t span{font-size:12.5px;color:var(--sub)}
+.mine .v{font-weight:800;font-size:18px;color:var(--navy)}
+.bar{height:6px;background:#f1e8d8;border-radius:99px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--orange);border-radius:99px}
+
+.toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:rgba(29,59,92,.95);color:#fff;padding:10px 18px;border-radius:999px;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap;z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.fade{animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="phone">
+  <main class="screen" id="screen"></main>
+  <nav class="nav" id="nav"></nav>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ===================== 데이터 =====================
+ * 대학별 "주요 실기 유형"은 제공받은 자료를 그대로 옮긴 것입니다.
+ * 만점 기준(STD)은 2027학년도 자료가 있는 대학·학과만 등록했습니다.
+ * 학과·전형마다 다를 수 있으니 지원 전 모집요강으로 최종 확인하세요.
+ */
+const EVENTS = {
+  jump:     {name:'제자리멀리뛰기',   short:'제자리멀리뛰기', unit:'cm', better:'high', step:1,   base:250, dec:0},
+  ball:     {name:'메디신볼던지기',   short:'메디신볼',   unit:'m',  better:'high', step:0.1, base:9,   dec:1},
+  run10:    {name:'10m 왕복달리기',   short:'10m 왕복',   unit:'초', better:'low',  step:0.1, base:9,   dec:2},
+  run20:    {name:'20m 왕복달리기',   short:'20m 왕복',   unit:'초', better:'low',  step:0.1, base:15,  dec:2},
+  shuttle2: {name:'왕복달리기',       short:'왕복달리기', unit:'초', better:'low',  step:0.1, base:10,  dec:2},
+  zigzag:   {name:'지그재그달리기',   short:'지그재그',   unit:'초', better:'low',  step:0.1, base:13,  dec:2},
+  run100:   {name:'100m 달리기',      short:'100m',       unit:'초', better:'low',  step:0.1, base:13,  dec:2},
+  weightrun:{name:'중량 메고 달리기', short:'중량 달리기', unit:'초', better:'low',  step:0.1, base:10,  dec:2},
+  situp:    {name:'윗몸일으키기',     short:'윗몸일으키기', unit:'회', better:'high', step:1,  base:50,  dec:0},
+  sit:      {name:'좌전굴',           short:'좌전굴',     unit:'cm', better:'high', step:0.5, base:20,  dec:1},
+  side:     {name:'사이드스텝',       short:'사이드스텝', unit:'회', better:'high', step:1,   base:45,  dec:0},
+  back:     {name:'배근력',           short:'배근력',     unit:'kg', better:'high', step:1,   base:150, dec:0},
+  highjump: {name:'높이뛰기',         short:'높이뛰기',   unit:'cm', better:'high', step:1,   base:150, dec:0},
+  vjump:    {name:'제자리높이뛰기',   short:'제자리높이뛰기', unit:'cm', better:'high', step:1, base:60, dec:0},
+  sargent:  {name:'서전트점프',       short:'서전트점프', unit:'cm', better:'high', step:1,   base:60,  dec:0},
+  triple:   {name:'제자리 세단뛰기',  short:'세단뛰기',   unit:'cm', better:'high', step:1,   base:700, dec:0},
+  handball: {name:'핸드볼공던지기',   short:'핸드볼공',   unit:'m',  better:'high', step:0.5, base:35,  dec:1},
+  pullup:   {name:'턱걸이',           short:'턱걸이',     unit:'회', better:'high', step:1,   base:10,  dec:0},
+  hang:     {name:'오래매달리기',     short:'오래매달리기', unit:'초', better:'high', step:1,  base:60,  dec:0},
+  flexhang: {name:'팔굽혀 매달리기',  short:'팔굽혀 매달리기', unit:'초', better:'high', step:1, base:30, dec:0},
+  layup:    {name:'농구 레이업슛',    short:'레이업슛',   unit:'회', better:'high', step:1,   base:10,  dec:0},
+  goalshot: {name:'농구 골밑슛',      short:'골밑슛',     unit:'회', better:'high', step:1,   base:10,  dec:0},
+};
+
+// 2027학년도 만점 기준 (자료가 있는 대학만)
+const STD_YEAR = 2027;
+const STD = {
+  '경기대': {dept:'스포츠과학부',       M:{jump:300, run20:13.4}, F:{jump:250, run20:15.4}},
+  '상명대': {dept:'스포츠건강관리전공', M:{jump:310}},
+  '한신대': {dept:'특수체육학과',       M:{jump:305}, F:{jump:240}},
+};
+
+// 지도 타일 위치: [left, top, width, height] (%)
+const REGIONS = [
+  {id:'gg',   name:'경기', full:'경기 · 인천',     color:'#f9c79c', pos:[5,6,31,22], low:true},
+  {id:'seoul',name:'서울', full:'서울특별시',      color:'#f39a6b', pos:[13,11,15,8], small:true},
+  {id:'gw',   name:'강원', full:'강원특별자치도',  color:'#a9d2ef', pos:[38,2,46,24]},
+  {id:'cn',   name:'충남', full:'충청남도',        color:'#b9dc9b', pos:[3,30,27,18]},
+  {id:'cb',   name:'충북', full:'충청북도',        color:'#f6d987', pos:[32,28,22,15]},
+  {id:'dj',   name:'대전', full:'대전 · 세종',     color:'#9fd08e', pos:[28,41,15,8], small:true},
+  {id:'gb',   name:'경북', full:'경상북도',        color:'#b8d4f2', pos:[56,28,34,25]},
+  {id:'dg',   name:'대구', full:'대구광역시',      color:'#8fbfe8', pos:[58,49,15,8], small:true},
+  {id:'jb',   name:'전북', full:'전북특별자치도',  color:'#fbe6a2', pos:[5,50,34,15]},
+  {id:'gn',   name:'경남', full:'경상남도',        color:'#f8c592', pos:[41,58,34,20]},
+  {id:'bs',   name:'부산', full:'부산광역시',      color:'#c6e1f7', pos:[77,62,17,12]},
+  {id:'jn',   name:'전남', full:'전남 · 광주',     color:'#fdeab7', pos:[3,67,36,18]},
+  {id:'jeju', name:'제주', full:'제주특별자치도',  color:'#a9dcae', pos:[10,89,22,8]},
+];
+
+// [지역, 대학, 위치, 주요 실기 유형(문장 또는 줄 목록), 기록 가능한 종목 ('종목:M' / '종목:F'는 성별 전용)]
+const CHECK = '학과별 전형 확인 필요';
+const UNI_RAW = [
+  // 서울
+  ['seoul','건국대','서울특별시 광진구','왕복달리기, 높이뛰기, 체조, 농구, 윗몸일으키기','shuttle2 highjump situp'],
+  ['seoul','고려대','서울특별시 성북구','높이뛰기, 농구 레이업슛, 지그재그달리기','highjump layup zigzag'],
+  ['seoul','광운대','서울특별시 노원구','제자리멀리뛰기, 사이드스텝, 윗몸일으키기','jump side situp'],
+  ['seoul','국민대','서울특별시 성북구','왕복달리기, 제자리멀리뛰기, 윗몸일으키기, 메디신볼던지기 등','shuttle2 jump situp ball'],
+  ['seoul','덕성여대','서울특별시 도봉구','좌전굴, 제자리높이뛰기, 배근력, 왕복달리기','sit vjump back shuttle2'],
+  ['seoul','동국대','서울특별시 중구','배근력, 좌전굴, 제자리멀리뛰기, 중량 메고 달리기','back sit jump weightrun'],
+  ['seoul','동덕여대','서울특별시 성북구','댄스 작품 실연 또는 기초체력 종목',''],
+  ['seoul','삼육대','서울특별시 노원구','제자리멀리뛰기, 메디신볼던지기, 왕복달리기','jump ball shuttle2'],
+  ['seoul','상명대','서울특별시 종로구','제자리멀리뛰기, 메디신볼던지기, 왕복달리기','jump ball shuttle2'],
+  ['seoul','서울과학기술대','서울특별시 노원구','제자리멀리뛰기, 왕복달리기, 메디신볼던지기','jump shuttle2 ball'],
+  ['seoul','서울대','서울특별시 관악구','제자리멀리뛰기, 턱걸이·오래매달리기, 핸드볼공던지기, 100m 달리기, 농구, 축구','jump pullup hang handball run100'],
+  ['seoul','서울시립대','서울특별시 동대문구','좌전굴, 제자리멀리뛰기, 100m 달리기, 왕복달리기','sit jump run100 shuttle2'],
+  ['seoul','서울여대','서울특별시 노원구','좌전굴, 제자리멀리뛰기, 오래매달리기 및 전공실기','sit jump hang'],
+  ['seoul','성신여대','서울특별시 성북구','대학·학과별 전형 확인 필요',''],
+  ['seoul','세종대','서울특별시 광진구','대학·학과별 전형 확인 필요',''],
+  ['seoul','숙명여대','서울특별시 용산구','대학·학과별 전형 확인 필요',''],
+  ['seoul','숭실대','서울특별시 동작구','대학·학과별 전형 확인 필요',''],
+  ['seoul','연세대','서울특별시 서대문구','골프·농구·배드민턴·수영·축구·태권도 중 택1 전공실기',''],
+  ['seoul','이화여대','서울특별시 서대문구','제자리멀리뛰기, 메디신볼던지기, 10m 왕복달리기','jump ball run10'],
+  ['seoul','한국체육대','서울특별시 송파구','10m 왕복달리기, 제자리멀리뛰기, 메디신볼던지기 및 학과별 전공실기','run10 jump ball'],
+  ['seoul','한양대','서울특별시 성동구','대학·학과별 전형 확인 필요',''],
+  // 인천·경기
+  ['gg','인천대','인천광역시 연수구','학과별 기초체력 실기',''],
+  ['gg','인하대','인천광역시 미추홀구','학과별 기초체력 실기',''],
+  ['gg','가천대','경기도 성남시','배근력, 메디신볼던지기, 제자리멀리뛰기, 10m 왕복달리기 / 태권도 전공실기','back ball jump run10'],
+  ['gg','강남대','경기도 용인시','10m 왕복달리기, 제자리멀리뛰기, 메디신볼던지기, 사이드스텝','run10 jump ball side'],
+  ['gg','경기대','경기도 수원시','20m 왕복달리기, 제자리멀리뛰기, 메디신볼던지기','run20 jump ball'],
+  ['gg','경동대','경기도',CHECK,''],
+  ['gg','단국대','경기도 용인시','캠퍼스·학과별 전형 확인 필요',''],
+  ['gg','명지대','경기도 용인시',CHECK,''],
+  ['gg','성결대','경기도 안양시',CHECK,''],
+  ['gg','성균관대','경기도 수원시',CHECK,''],
+  ['gg','수원대','경기도 화성시','제자리멀리뛰기, 지그재그달리기, 배근력','jump zigzag back'],
+  ['gg','신한대','경기도 의정부시','태권도 기본발차기·표적겨루기·품새·자유격파',''],
+  ['gg','용인대','경기도 용인시','제자리멀리뛰기, 10m 반복달리기, 유도·태권도·골프 등 전공실기','jump run10'],
+  ['gg','중부대','경기도 고양시','제자리멀리뛰기, 10m 왕복달리기','jump run10'],
+  ['gg','중앙대','경기도 안성시','캠퍼스·학과별 전형 확인 필요',''],
+  ['gg','한경국립대','경기도 안성시',CHECK,''],
+  ['gg','한신대','경기도 오산시','제자리멀리뛰기, 20m 왕복달리기, 메디신볼던지기','jump run20 ball'],
+  ['gg','한양대 ERICA','경기도 안산시',CHECK,''],
+  ['gg','화성의과학대','경기도 화성시',CHECK,''],
+  // 강원
+  ['gw','가톨릭관동대','강원특별자치도 강릉시','제자리멀리뛰기, 10m 왕복달리기, 메디신볼던지기','jump run10 ball'],
+  ['gw','강원대 삼척','강원특별자치도 삼척시','윗몸일으키기, 사이드스텝, 제자리멀리뛰기','situp side jump'],
+  ['gw','강원대 춘천','강원특별자치도 춘천시','지그재그달리기, 제자리멀리뛰기, 윗몸일으키기','zigzag jump situp'],
+  ['gw','상지대','강원특별자치도 원주시','윗몸일으키기, 제자리멀리뛰기, 10m 왕복달리기 / 태권도','situp jump run10'],
+  ['gw','한림대','강원특별자치도 춘천시','지그재그달리기, 서전트점프, 윗몸일으키기','zigzag sargent situp'],
+  // 대전·세종
+  ['dj','대전대','대전광역시 동구','제자리멀리뛰기, 20m 왕복달리기','jump run20'],
+  ['dj','목원대','대전광역시 서구','10m 왕복달리기, 제자리멀리뛰기','run10 jump'],
+  ['dj','충남대','대전광역시 유성구','핸드볼공던지기, 체조 마루운동','handball'],
+  ['dj','한남대','대전광역시 대덕구',CHECK,''],
+  ['dj','고려대 세종','세종특별자치시',CHECK,''],
+  // 충남
+  ['cn','건양대','충청남도 논산시',CHECK,''],
+  ['cn','국립공주대','충청남도 공주시',['배구 언더토스·오버토스','제자리 세단뛰기(남) / 제자리멀리뛰기(여)','남녀별 체조 동작'],'triple:M jump:F'],
+  ['cn','나사렛대','충청남도 천안시',CHECK,''],
+  ['cn','남서울대','충청남도 천안시',CHECK,''],
+  ['cn','단국대 천안','충청남도 천안시',CHECK,''],
+  ['cn','백석대','충청남도 천안시',CHECK,''],
+  ['cn','상명대 천안','충청남도 천안시',CHECK,''],
+  ['cn','선문대','충청남도 아산시',CHECK,''],
+  ['cn','순천향대','충청남도 아산시','제자리멀리뛰기, 농구 골밑슛·공던지기, 20m 왕복달리기 등','jump goalshot run20'],
+  ['cn','중부대 금산','충청남도 금산군','10m 왕복달리기, 제자리멀리뛰기','run10 jump'],
+  ['cn','한서대','충청남도 서산시','10m 왕복달리기, 윗몸일으키기 또는 20m 왕복달리기, 제자리멀리뛰기, 메디신볼던지기','run10 situp run20 jump ball'],
+  ['cn','호서대','충청남도 아산시','제자리멀리뛰기, 10m 왕복달리기, 메디신볼던지기','jump run10 ball'],
+  // 충북
+  ['cb','건국대 충주','충청북도 충주시','20m 왕복달리기, 제자리멀리뛰기, 농구','run20 jump'],
+  ['cb','한국교통대','충청북도 충주시','20m 왕복달리기, 제자리멀리뛰기, 윗몸일으키기','run20 jump situp'],
+  ['cb','서원대','충청북도 청주시','10m 왕복달리기, 메디신볼던지기, 제자리멀리뛰기, 좌전굴','run10 ball jump sit'],
+  ['cb','청주대','충청북도 청주시','높이뛰기, 농구 골밑슛, 브릿지, 제자리멀리뛰기','highjump goalshot jump'],
+  ['cb','충북대','충청북도 청주시','지그재그달리기, 제자리멀리뛰기','zigzag jump'],
+  ['cb','한국교원대','충청북도 청주시','20m 왕복달리기, 높이뛰기, 턱걸이·팔굽혀 매달리기, 배구 브래디 테스트','run20 highjump pullup flexhang'],
+  // 대구·경북
+  ['dg','경북대 대구','대구광역시 북구','지그재그달리기, 제자리멀리뛰기, 체조 앞뒤구르기, 농구 레이업슛','zigzag jump layup'],
+  ['dg','계명대','대구광역시 달서구',CHECK,''],
+  ['gb','경북대 상주','경상북도 상주시',CHECK,''],
+  ['gb','대구대','경상북도 경산시',CHECK,''],
+  ['gb','대구한의대','경상북도 경산시',CHECK,''],
+  ['gb','영남대','경상북도 경산시',CHECK,''],
+  // 부산·경남
+  ['bs','경성대','부산광역시 남구',CHECK,''],
+  ['bs','국립부경대','부산광역시 남구',CHECK,''],
+  ['bs','동아대','부산광역시 사하구',CHECK,''],
+  ['bs','동의대','부산광역시 부산진구',CHECK,''],
+  ['bs','부산대','부산광역시 금정구','대학 공식 모집요강의 전형별 실기 종목 확인 필요',''],
+  ['bs','신라대','부산광역시 사상구',CHECK,''],
+  ['bs','한국해양대','부산광역시 영도구',CHECK,''],
+  ['gn','경남대','경상남도 창원시',CHECK,''],
+  ['gn','경상국립대','경상남도 진주시',['100m 달리기','체조','축구: 리프팅 / 드리블 / 슛','배구: 5m 원 안 언더핸드·오버핸드 번갈아하기'],'run100'],
+  // 광주·전남·전북·제주
+  ['jn','전남대','광주광역시 북구','학과·전형별 실기 확인 필요',''],
+  ['jn','조선대','광주광역시 동구',CHECK,''],
+  ['jn','순천대','전라남도 순천시','사이드스텝, 서전트점프, 좌전굴, 윗몸일으키기','side sargent sit situp'],
+  ['jb','우석대','전북특별자치도 완주군','10m 왕복달리기, 제자리멀리뛰기, 메디신볼던지기 / 태권도 전공실기','run10 jump ball'],
+  ['jb','원광대','전북특별자치도 익산시','지그재그달리기, 배구 토스, 제자리멀리뛰기, 좌전굴 등','zigzag jump sit'],
+  ['jb','전북대','전북특별자치도 전주시',['체육교육과: 체조·농구·배구·축구','스포츠과학과: 제자리멀리뛰기·핸드볼공던지기·윗몸일으키기·좌전굴'],'jump handball situp sit'],
+  ['jb','전주대','전북특별자치도 전주시','20m 왕복달리기, 제자리멀리뛰기, 메디신볼던지기 / 축구·태권도 전공실기','run20 jump ball'],
+  ['jeju','제주대','제주특별자치도 제주시','20m 왕복달리기, 좌전굴, 농구 / 학과별 턱걸이·오래매달리기·제자리높이뛰기','run20 sit pullup hang vjump'],
+];
+
+const roundStep = (v,step) => +(Math.round(v/step)*step).toFixed(2);
+const UNIS = UNI_RAW.map(([region,name,loc,desc,ev]) => ({
+  id:name, region, name, loc, desc:[].concat(desc),
+  events: ev ? ev.split(' ').map(t => { const [e,g] = t.split(':'); return {e, g:g||null}; }) : [],
+  std: STD[name] || null,
+}));
+const uniById = id => UNIS.find(u => u.id === id);
+const regionById = id => REGIONS.find(r => r.id === id);
+const gender = () => store.gender || 'M';
+const evsOf = u => u.events.filter(x => !x.g || x.g === gender()).map(x => x.e);
+const maxOf = (u,e) => u?.std?.[gender()]?.[e] ?? null;
+const hasGenderInfo = u => !!u.std || u.events.some(x => x.g);
+
+/* ===================== 저장소 ===================== */
+const KEY = 'pe-road-v1';
+let store = {saved:[], records:{}, targets:{}};
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) store = Object.assign(store, s); } catch(e) {}
+const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {} };
+
+const isSaved = id => store.saved.includes(id);
+function toggleSave(id){
+  if (isSaved(id)) { store.saved = store.saved.filter(x=>x!==id); toast('저장 목록에서 뺐어요'); }
+  else { store.saved.push(id); toast('관심 대학으로 저장했어요 ⭐'); }
+  persist(); render();
+}
+const recsOf = e => (store.records[e] || []).slice().sort((a,b)=> a.date.localeCompare(b.date) || a.id-b.id);
+const latest = e => { const r = recsOf(e); return r.length ? r[r.length-1] : null; };
+const fmt = (e,v) => (+v).toFixed(EVENTS[e].dec);
+const meets = (e,v,t) => EVENTS[e].better==='high' ? v >= t : v <= t;
+const today = () => { const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); };
+const dotted = d => d.replaceAll('-','.');
+
+/* ===================== 아이콘 ===================== */
+const I = {
+  back:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  home:(on)=>`<svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="${on?'#f5862a':'none'}" stroke="${on?'#f5862a':'#444'}" stroke-width="2" stroke-linejoin="round"/></svg>`,
+  search:(on,c)=>`<svg viewBox="0 0 24 24" fill="none" stroke="${c||(on?'#f5862a':'#444')}" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>`,
+  heart:(on,c)=>`<svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z" fill="${on?(c||'#f5862a'):'none'}" stroke="${c||(on?'#f5862a':'#444')}" stroke-width="2" stroke-linejoin="round"/></svg>`,
+  user:(on)=>`<svg viewBox="0 0 24 24" fill="none" stroke="${on?'#f5862a':'#444'}" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8" r="4" fill="${on?'#f5862a':'none'}"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>`,
+  star:(on,size=26)=>`<svg width="${size}" height="${size}" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" fill="${on?'#f8c33c':'none'}" stroke="${on?'#e3a417':'#e0a43a'}" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
+  pin:'<svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z" fill="#f5862a"/><circle cx="12" cy="10" r="2.6" fill="#fff"/></svg>',
+  trash:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5862a" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>',
+  chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b9ab92" stroke-width="2.4" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>',
+  school:(s=34)=>`<svg width="${s}" height="${s}" viewBox="0 0 48 48"><rect x="6" y="18" width="36" height="22" rx="2" fill="#dbe9fb" stroke="#4a78b8" stroke-width="2"/><path d="M14 18V12h20v6" fill="#eef4fc" stroke="#4a78b8" stroke-width="2"/><path d="M24 4v8" stroke="#4a78b8" stroke-width="2"/><path d="M24 4h7l-2 2 2 2h-7" fill="#f5862a"/><rect x="21" y="30" width="6" height="10" fill="#4a78b8"/><g fill="#4a78b8"><rect x="10" y="22" width="5" height="4"/><rect x="18" y="22" width="5" height="4"/><rect x="25" y="22" width="5" height="4"/><rect x="33" y="22" width="5" height="4"/><rect x="10" y="30" width="5" height="4"/><rect x="33" y="30" width="5" height="4"/></g><rect x="3" y="40" width="42" height="3" rx="1.5" fill="#8cc76f"/></svg>`,
+  plus:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+};
+
+/* ===================== 라우팅 ===================== */
+let stack = [{view:'home'}];
+const cur = () => stack[stack.length-1];
+function go(view, p={}){ stack.push({view, ...p}); render(); }
+function replace(view, p={}){ stack[stack.length-1] = {view, ...p}; render(); }
+function back(){ if (stack.length>1) stack.pop(); render(); }
+function tab(view){ stack = [{view}]; render(); }
+
+function render(){
+  const s = cur();
+  const el = document.getElementById('screen');
+  el.innerHTML = `<div class="fade">${VIEWS[s.view](s)}</div>`;
+  el.scrollTop = 0;
+  const root = stack[0].view;
+  const T = [['home','홈',I.home],['search','검색',I.search],['saved','저장 목록',I.heart],['mine','내 기록',I.user]];
+  document.getElementById('nav').innerHTML = T.map(([v,l,ic]) =>
+    `<button class="${root===v?'on':''}" onclick="tab('${v}')">${ic(root===v)}<span>${l}</span></button>`).join('');
+  AFTER[s.view]?.(s);
+}
+
+let toastT;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+const genderToggle = () => `<div class="seg"><span>만점 기준 성별</span>
+  <button class="${gender()==='M'?'on':''}" onclick="setGender('M')">남</button><button class="${gender()==='F'?'on':''}" onclick="setGender('F')">여</button></div>`;
+function setGender(g){ store.gender = g; persist(); render(); }
+
+const header = (title, right) =>
+  `<div class="hd"><button class="back" onclick="back()" aria-label="뒤로">${I.back}</button><h2>${title}</h2><div class="r">${right ?? ''}</div></div>`;
+
+const uniRow = u => `
+  <div class="uni-row" role="button" tabindex="0" onclick="go('uni',{id:'${u.id}'})">
+    ${I.school(34)}
+    <span class="nm">${u.name}<span class="meta">${u.loc} · ${evsOf(u).length ? evsOf(u).map(e=>EVENTS[e].short).join(' / ') : u.desc[0]}</span></span>
+    <button class="icon-btn" aria-label="저장" onclick="event.stopPropagation();toggleSave('${u.id}')">${I.heart(isSaved(u.id))}</button>
+  </div>`;
+
+function searchMatches(q){
+  q = q.trim().replace(/\s/g,'');
+  if (!q) return {regions:[], unis:[]};
+  const has = s => s.replace(/\s/g,'').includes(q);
+  return {
+    regions: REGIONS.filter(r => has(r.name) || has(r.full)),
+    unis: UNIS.filter(u => has(u.name) || has(u.loc) || has(u.desc.join(' ')) || u.events.some(x => has(EVENTS[x.e].name))),
+  };
+}
+function resultsHTML(q){
+  const {regions, unis} = searchMatches(q);
+  if (!q.trim()) return '';
+  if (!regions.length && !unis.length) return `<div class="empty">'${q.replace(/[<>&"']/g,'')}' 검색 결과가 없어요</div>`;
+  return regions.map(r => `<button class="uni-row" onclick="go('region',{id:'${r.id}'})">
+      <span style="width:34px;height:34px;border-radius:10px;background:${r.color};flex:none"></span>
+      <span class="nm">${r.full}<span class="meta">대학 ${UNIS.filter(u=>u.region===r.id).length}곳</span></span>${I.chev}</button>`).join('')
+    + unis.map(uniRow).join('');
+}
+
+/* ===================== 화면 ===================== */
+const VIEWS = {
+  home: () => `
+    <div class="logo">체교 실기 <b>Road</b><span class="star">⭐</span></div>
+    <p class="tagline">어느 지역의 대학을 찾아볼까요?</p>
+    <div class="map">
+      <span class="cloud" style="left:-2%;top:22%">☁️</span>
+      <span class="cloud" style="right:0;top:30%">☁️</span>
+      ${REGIONS.map(r => { const [l,t,w,h]=r.pos;
+        return `<button class="tile ${r.small?'small':''} ${r.low?'low':''}" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%;background:${r.color}" onclick="go('region',{id:'${r.id}'})"><span>${r.name}</span></button>`; }).join('')}
+    </div>
+    <label class="search">${I.search(false,'#555')}<input id="q" placeholder="지역, 대학, 종목을 검색해보세요!" autocomplete="off"></label>
+    <div class="results" id="res"></div>`,
+
+  search: () => `
+    <div class="hd plain"><h2>검색</h2></div>
+    <label class="search">${I.search(false,'#555')}<input id="q" placeholder="지역, 대학, 종목을 검색해보세요!" autocomplete="off"></label>
+    <div class="sec-t">종목으로 찾기</div>
+    <div class="chips" style="flex-wrap:wrap">${Object.entries(EVENTS).map(([k,e])=>[k,e,UNIS.filter(u=>u.events.some(x=>x.e===k)).length]).sort((a,b)=>b[2]-a[2])
+      .map(([k,e,n])=>`<button class="chip" onclick="setQ('${e.name}')">${e.name} <small style="color:var(--sub)">${n}</small></button>`).join('')}</div>
+    <div class="results" id="res"></div>
+    <div id="all"><div class="sec-t">전체 지역</div><div class="list">${REGIONS.map(r=>`
+      <button class="uni-row" onclick="go('region',{id:'${r.id}'})"><span style="width:34px;height:34px;border-radius:10px;background:${r.color};flex:none"></span>
+      <span class="nm">${r.full}<span class="meta">대학 ${UNIS.filter(u=>u.region===r.id).length}곳</span></span>${I.chev}</button>`).join('')}</div></div>`,
+
+  region: s => { const r = regionById(s.id);
+    return `${header(r.full)}
+      <p class="sub-t">${r.full}의 대학을 선택하세요!</p>
+      <div class="list">${UNIS.filter(u=>u.region===r.id).map(uniRow).join('')}</div>`; },
+
+  uni: s => { const u = uniById(s.id); const sv = isSaved(u.id); const evs = evsOf(u);
+    return `${header(u.name, `<button aria-label="저장" onclick="toggleSave('${u.id}')">${I.star(sv,30)}</button>`)}
+      <div class="uni-top">${I.school(64)}<span class="loc">${I.pin}${u.loc}</span></div>
+      <div class="sec-t">주요 실기 유형</div>
+      <div class="box desc"><ul>${u.desc.map(d=>`<li>${d}</li>`).join('')}</ul></div>
+      ${hasGenderInfo(u) ? genderToggle() : ''}
+      ${evs.length ? `<div class="sec-t">기록할 수 있는 종목 <small>· 누르면 기록을 입력해요</small></div>
+      <div class="box">${evs.map(e => { const L = latest(e), m = maxOf(u,e), ok = L && m!=null && meets(e,L.v,m);
+        return `<button class="kv ev-row" onclick="go('record',{ev:'${e}',uni:'${u.id}'})">
+          <span>${EVENTS[e].name}${L?` <span style="font-size:11px;color:${ok?'#3f9c4a':'#c98a1b'}">● ${fmt(e,L.v)}${EVENTS[e].unit}</span>`:''}</span>
+          <span class="v">${m!=null ? `만점 ${fmt(e,m)}${EVENTS[e].unit} ${EVENTS[e].better==='high'?'이상':'이하'}` : '<span class="muted">만점 기준 확인 필요</span>'}<span class="chev">›</span></span></button>`; }).join('')}</div>
+      ${u.std ? `<div class="hint">${STD_YEAR}학년도 만점 기준 · ${u.std.dept} (${gender()==='M'?'남':'여'})${u.std[gender()] ? '' : ' 자료 없음'}</div>` : ''}` : ''}
+      <div class="btns">
+        <button class="btn ghost ${sv?'on':''}" onclick="toggleSave('${u.id}')">${I.star(sv,18)} ${sv?'저장됨':'저장하기'}</button>
+        ${evs.length ? `<button class="btn nv" onclick="go('record',{ev:'${evs[0]}',uni:'${u.id}'})">내 기록 입력하기</button>` : ''}
+      </div>
+      <p class="note">※ 실기 종목은 학과·전형마다 다를 수 있어요. 지원 전 반드시 해당 대학 모집요강을 확인하세요.</p>`; },
+
+  record: s => { const E = EVENTS[s.ev]; const u = s.uni && uniById(s.uni);
+    const evs = u ? evsOf(u) : Object.keys(EVENTS); const m = maxOf(u, s.ev);
+    if (s.target == null) s.target = store.targets[s.ev] ?? m ?? latest(s.ev)?.v ?? E.base;
+    const recs = recsOf(s.ev).reverse();
+    return `${header(E.name)}
+      <div class="chips">${evs.map(e=>`<button class="chip ${e===s.ev?'on':''}" onclick="switchEv('${e}')">${EVENTS[e].name}</button>`).join('')}</div>
+      <div class="sec-t">내 현재 기록</div>
+      <div class="field"><input id="val" type="number" inputmode="decimal" step="${E.step}" placeholder="${latest(s.ev)?fmt(s.ev,latest(s.ev).v):'0'}" value="${s.draft ?? ''}"><span class="u">${E.unit}</span></div>
+      <div class="date-row">측정일 <input id="date" type="date" value="${s.date ?? today()}" max="${today()}"></div>
+      <div class="sec-t">목표 기록</div>
+      <div class="stepper"><button onclick="bump(-1)" aria-label="빼기">−</button><div class="val"><span id="tgt">${fmt(s.ev,s.target)}</span><small>${E.unit}</small></div><button onclick="bump(1)" aria-label="더하기">+</button></div>
+      ${u ? `<div class="hint">${m!=null ? `${u.name} ${STD_YEAR} 만점 기준 (${u.std.dept}, ${gender()==='M'?'남':'여'}): ${fmt(s.ev,m)}${E.unit} ${E.better==='high'?'이상':'이하'}` : `${u.name} 만점 기준은 모집요강에서 확인하세요`}</div>` : ''}
+      <div class="sec-t">최근 기록 <small>(선택)</small></div>
+      <div class="recs">${recs.length ? recs.map(r=>`
+        <div class="rec"><span class="d">${dotted(r.date)}</span><span class="n">${fmt(s.ev,r.v)}</span><span class="u">${E.unit}</span>
+        <button class="icon-btn" aria-label="삭제" onclick="delRec(${r.id})">${I.trash}</button></div>`).join('')
+        : '<div class="empty">아직 기록이 없어요. 첫 기록을 남겨볼까요?</div>'}</div>
+      <div class="btns"><button class="btn or" onclick="saveRec()">기록 저장하기</button></div>
+      ${recs.length ? `<div class="btns" style="margin-top:10px"><button class="btn ghost" style="flex:1" onclick="replace('analysis',{ev:'${s.ev}',uni:${s.uni?`'${s.uni}'`:'null'}})">기록 분석 보기</button></div>`:''}`; },
+
+  analysis: s => { const E = EVENTS[s.ev]; const u = s.uni && uniById(s.uni);
+    const recs = recsOf(s.ev); const L = recs[recs.length-1];
+    const tgt = store.targets[s.ev] ?? maxOf(u, s.ev) ?? L.v;
+    const gap = E.better==='high' ? tgt - L.v : L.v - tgt;
+    const done = gap <= 0;
+    const first = recs[0];
+    const imp = E.better==='high' ? L.v - first.v : first.v - L.v;
+    let msg;
+    if (recs.length < 2) msg = `첫 기록을 남겼어요!<br>꾸준히 기록하면 변화를 그래프로 보여드릴게요.`;
+    else if (imp > 0) msg = `지금도 꾸준히 잘하고 있어요!<br>처음보다 <b>${E.better==='high'?'+':'−'}${fmt(s.ev,imp)}${E.unit} ${E.better==='high'?'향상':'단축'}!</b>`;
+    else if (imp === 0) msg = `기록을 잘 유지하고 있어요.<br>조금만 더 힘내서 <b>한 단계 더!</b>`;
+    else msg = `컨디션이 안 좋은 날도 있어요.<br>쉬어가며 <b>다시 도전해봐요!</b>`;
+    return `${header(E.name)}
+      <div class="pill">기록 분석 결과</div>
+      <div class="box">
+        <div class="kv"><span>현재 기록</span><span class="big">${fmt(s.ev,L.v)}<small>${E.unit}</small></span></div>
+        <div class="kv"><span>목표 기록</span><span class="big">${fmt(s.ev,tgt)}<small>${E.unit}</small></span></div>
+        <div class="kv"><span>목표까지 남은 거리</span>${done
+          ? `<span class="big gr">목표 달성! 🎉</span>`
+          : `<span class="big or">${fmt(s.ev,gap)}<small>${E.unit}</small></span>`}</div>
+      </div>
+      <div class="pill">최근 기록 변화</div>
+      <div class="chart">${chart(s.ev, recs.slice(-6), tgt)}</div>
+      <div class="cheer"><div>${msg}</div></div>
+      <div class="btns"><button class="btn or" onclick="replace('record',{ev:'${s.ev}',uni:${s.uni?`'${s.uni}'`:'null'}})">새 기록 추가하기</button></div>`; },
+
+  saved: () => { const list = store.saved.map(uniById).filter(Boolean);
+    return `<div class="hd plain"><h2>저장한 대학</h2></div>
+      ${list.length ? `<div class="legend"><span><i class="dot ok"></i>만점 달성</span><span><i class="dot ing"></i>기록 있음</span><span><i class="dot no"></i>기록 없음</span></div>` : ''}
+      <div class="list">${list.length ? list.map(u => { const evs = evsOf(u); return `
+        <div class="sv">
+          <div class="sv-h"><b>${u.name}</b><button class="icon-btn" aria-label="저장 해제" onclick="toggleSave('${u.id}')">${I.star(true,24)}</button></div>
+          <div class="ev">실기: ${u.desc.join(' / ')}</div>
+          <button class="prep" onclick="go('uni',{id:'${u.id}'})"><span class="lbl">내 준비 현황</span>
+            ${evs.length ? evs.map(e=>{ const L=latest(e), m=maxOf(u,e); const c = !L?'no': m!=null && meets(e,L.v,m)?'ok':'ing';
+              return `<i class="dot ${c}" title="${EVENTS[e].name}"></i>`; }).join('') : '<span class="muted">모집요강 확인 필요</span>'}
+            <span class="chev">${I.chev}</span></button>
+        </div>`; }).join('')
+        : `<div class="empty" style="padding:28px">아직 저장한 대학이 없어요.<br>관심 있는 대학의 ♡ 또는 ☆를 눌러 저장해보세요!</div>`}</div>
+      <div class="btns"><button class="btn or" onclick="tab('search')">${I.plus} 대학 검색하기</button></div>`; },
+
+  mine: () => { const evs = Object.keys(EVENTS).filter(e => recsOf(e).length);
+    return `<div class="hd plain"><h2>내 기록</h2></div>
+      ${genderToggle()}
+      <div class="list" style="margin-top:14px">${evs.length ? evs.map(e => { const E=EVENTS[e]; const L=latest(e); const t=store.targets[e];
+        const pct = t ? Math.max(0, Math.min(100, E.better==='high' ? L.v/t*100 : t/L.v*100)) : null;
+        return `<button class="mine" onclick="go('analysis',{ev:'${e}'})">
+          <span class="t"><b>${E.name}</b><span>기록 ${recsOf(e).length}회 · ${dotted(L.date)}${t!=null?` · 목표 ${fmt(e,t)}${E.unit}`:''}</span>
+          ${pct!=null?`<div class="bar"><i style="width:${pct}%"></i></div>`:''}</span>
+          <span class="v">${fmt(e,L.v)}<small style="font-size:12px;font-weight:500;color:#666"> ${E.unit}</small></span>${I.chev}</button>`; }).join('')
+        : `<div class="empty" style="padding:28px">아직 입력한 기록이 없어요.</div>`}</div>
+      <div class="sec-t">종목 선택해서 기록하기</div>
+      <div class="chips" style="flex-wrap:wrap">${Object.keys(EVENTS).map(e=>`<button class="chip" onclick="go('record',{ev:'${e}'})">${EVENTS[e].name}</button>`).join('')}</div>`; },
+};
+
+/* 화면 렌더 후 이벤트 연결 */
+const AFTER = {
+  home: bindSearch, search: bindSearch,
+  record: s => { const v=document.getElementById('val'), d=document.getElementById('date');
+    v.oninput = () => s.draft = v.value; d.oninput = () => s.date = d.value;
+    v.onkeydown = e => { if (e.key==='Enter') saveRec(); }; },
+};
+function bindSearch(s){
+  const q = document.getElementById('q'), res = document.getElementById('res'), all = document.getElementById('all');
+  q.value = s.q || '';
+  const upd = () => { s.q = q.value; res.innerHTML = resultsHTML(q.value); if (all) all.hidden = !!q.value.trim(); };
+  q.oninput = upd; upd();
+}
+function setQ(t){ cur().q = t; render(); }
+
+function chart(ev, recs, tgt){
+  const E = EVENTS[ev], W=320, H=190, pl=40, pr=18, pt=24, pb=30;
+  const vals = recs.map(r=>r.v).concat(tgt);
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = (hi-lo)*0.2 || Math.max(E.step*5, hi*0.05);
+  lo -= pad; hi += pad;
+  const x = i => recs.length===1 ? (pl+W-pr)/2 : pl + i*(W-pl-pr)/(recs.length-1);
+  const y = v => pt + (hi-v)/(hi-lo)*(H-pt-pb);
+  const ticks = [0,1,2,3].map(i => lo + (hi-lo)*i/3);
+  const td = E.dec || (hi-lo < 6 ? 1 : 0);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="기록 변화 그래프">
+    ${ticks.map(t=>`<line x1="${pl}" x2="${W-pr}" y1="${y(t)}" y2="${y(t)}" stroke="#eee3d0"/><text x="${pl-6}" y="${y(t)+4}" text-anchor="end" font-size="10" fill="#888">${t.toFixed(td)}</text>`).join('')}
+    <line x1="${pl}" x2="${W-pr}" y1="${y(tgt)}" y2="${y(tgt)}" stroke="#1d3b5c" stroke-dasharray="4 4" stroke-width="1.4"/>
+    <text x="${W-pr}" y="${y(tgt)-5}" text-anchor="end" font-size="10" font-weight="700" fill="#1d3b5c">목표 ${fmt(ev,tgt)}</text>
+    <polyline fill="none" stroke="#f5862a" stroke-width="2.5" stroke-linejoin="round" points="${recs.map((r,i)=>`${x(i)},${y(r.v)}`).join(' ')}"/>
+    ${recs.map((r,i)=>`<circle cx="${x(i)}" cy="${y(r.v)}" r="4.5" fill="#fff" stroke="#f5862a" stroke-width="2.5"/>
+      <text x="${x(i)}" y="${y(r.v)-10}" text-anchor="middle" font-size="11" font-weight="700" fill="#333">${fmt(ev,r.v)}</text>
+      <text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="10" fill="#777">${r.date.slice(5).replace('-','.')}</text>`).join('')}
+  </svg>`;
+}
+
+/* 기록 입력 동작 */
+function switchEv(e){ const s=cur(); replace('record',{ev:e, uni:s.uni}); }
+function bump(dir){
+  const s = cur(), E = EVENTS[s.ev];
+  s.target = Math.max(0, roundStep(s.target + dir*E.step, E.step));
+  document.getElementById('tgt').textContent = fmt(s.ev, s.target);
+}
+function delRec(id){
+  const s = cur();
+  store.records[s.ev] = (store.records[s.ev]||[]).filter(r=>r.id!==id);
+  persist(); render(); toast('기록을 삭제했어요');
+}
+function saveRec(){
+  const s = cur();
+  const raw = document.getElementById('val').value.trim();
+  const date = document.getElementById('date').value || today();
+  store.targets[s.ev] = s.target;
+  if (raw !== '') {
+    const v = parseFloat(raw);
+    if (!isFinite(v) || v <= 0) { toast('올바른 기록을 입력해주세요'); return; }
+    (store.records[s.ev] ||= []).push({id: Date.now(), date, v});
+  } else if (!recsOf(s.ev).length) { persist(); toast('현재 기록을 입력해주세요'); return; }
+  persist();
+  toast(raw !== '' ? '기록을 저장했어요! 💪' : '목표를 저장했어요');
+  replace('analysis', {ev:s.ev, uni:s.uni});
+}
+
+render();
+</script>
+</body>
+</html>
